@@ -28,8 +28,8 @@ public class LeverageController {
             throw new RuntimeException("캔들 개수가 부족합니다.");
         }
 
-        List<String> prev = candles.get(1);  // 이전 봉
-        List<String> curr = candles.get(0);  // 현재 봉 (bitget은 최신이 0번째)
+        List<String> prev = candles.get(0);  // 이전 봉
+        List<String> curr = candles.get(1);  // 현재 봉
 
         // 문자열 → double 변환
         double currOpen = Double.parseDouble(curr.get(1));
