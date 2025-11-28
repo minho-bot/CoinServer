@@ -22,13 +22,13 @@ public class CciScheduler {
     private final Map<String, String> lastSignalMap = new HashMap<>();
 
     // 1시간봉 체크 (5분 마다 실행)
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void check1H() {
         checkCci("BTCUSDT", "1H");
     }
 
     // 4시간봉 체크
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void check4H() {
         checkCci("BTCUSDT", "4H");
     }
@@ -61,6 +61,7 @@ public class CciScheduler {
 
             log.info("[CCI SIGNAL] {} {} → {}", symbol, granularity, signal);
             // 등록된 계정의 모든 push token 순회
+            expoPushService.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, granularity + " " + signal);
         }
 
         // 현재 시그널 저장
