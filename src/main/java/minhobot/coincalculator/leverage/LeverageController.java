@@ -46,15 +46,18 @@ public class LeverageController {
         lossPercent = lossPercent / 100.0; // % → 0.x
 
         double leverage;
+        double stoploss;
 
         if (side.equalsIgnoreCase("long")) {
             double worstLow = Math.min(currLow, prevLow);
             double drawdown = (currentPrice - worstLow) / currentPrice;
             leverage = lossPercent / drawdown;
+            stoploss = worstLow;
         } else if (side.equalsIgnoreCase("short")) {
             double worstHigh = Math.max(currHigh, prevHigh);
             double drawup = (worstHigh - currentPrice) / currentPrice;
             leverage = lossPercent / drawup;
+            stoploss = worstHigh;
         } else {
             throw new RuntimeException("side는 long 또는 short 여야 합니다.");
         }
@@ -72,6 +75,7 @@ public class LeverageController {
                 .prevHigh(prevHigh)
                 .currLow(currLow)
                 .prevLow(prevLow)
+                .stoploss(stoploss)
                 .build();
     }
 }

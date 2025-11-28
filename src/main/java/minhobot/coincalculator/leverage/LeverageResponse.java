@@ -21,4 +21,5 @@ public class LeverageResponse {
     private double prevHigh;
     private double currLow;
     private double prevLow;
+    private double stoploss;
 }
