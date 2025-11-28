@@ -66,8 +66,9 @@ public class CciService {
 
         double prevCCI = cci.getValue(prev).doubleValue();
         double currentCCI = cci.getValue(last).doubleValue();
+        double currentPrice = Double.parseDouble(candles.get(candles.size() - 1).get(4));
 
-        return new CciResult(prevCCI, currentCCI);
+        return new CciResult(prevCCI, currentCCI, currentPrice);
     }
 
     private Duration getDuration(String granularity) {

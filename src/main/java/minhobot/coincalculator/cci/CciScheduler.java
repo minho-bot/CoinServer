@@ -41,6 +41,7 @@ public class CciScheduler {
 
         double prev = result.getPrevCCI();
         double curr = result.getCurrentCCI();
+        double price = result.getCurrentPrice();
 
         String signal = "NONE";
 
@@ -55,6 +56,9 @@ public class CciScheduler {
 
         // 변화가 있을 때만 푸시
         if (!signal.equals("NONE") && !signal.equals(lastSignal)) {
+            String title = signal + " Signal (" + granularity + ")";
+            String body = granularity + " " + signal + " | Price: " + price;
+
             log.info("[CCI SIGNAL] {} {} → {}", symbol, granularity, signal);
             // 등록된 계정의 모든 push token 순회
         }

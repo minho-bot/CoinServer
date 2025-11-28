@@ -22,12 +22,13 @@ public class CciController {
 
         double prev = result.getPrevCCI();
         double curr = result.getCurrentCCI();
+        double currentPrice = result.getCurrentPrice();
 
         String signal = "NONE";
 
         if (prev < -100 && curr >= -100) signal = "UP_-100";
         if (prev > 100 && curr <= 100) signal = "DOWN_100";
 
-        return new CciResponse(prev, curr, signal);
+        return new CciResponse(prev, curr, currentPrice, signal);
     }
 }

@@ -8,5 +8,6 @@ import lombok.Data;
 public class CciResponse {
     private double prevCCI;
     private double currentCCI;
+    private double currentPrice;
     private String crossing;
 }

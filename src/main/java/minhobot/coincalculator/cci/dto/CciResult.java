@@ -8,4 +8,5 @@ import lombok.Data;
 public class CciResult {
     private double prevCCI;
     private double currentCCI;
+    private double currentPrice;
 }
