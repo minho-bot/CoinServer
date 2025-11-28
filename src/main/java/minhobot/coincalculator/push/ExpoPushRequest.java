@@ -1,4 +1,4 @@
-package minhobot.coincalculator;
+package minhobot.coincalculator.push;
 
 import lombok.Getter;
 
