@@ -61,7 +61,7 @@ public class CciScheduler {
 
             log.info("[CCI SIGNAL] {} {} → {}", symbol, granularity, signal);
             // 등록된 계정의 모든 push token 순회
-            expoPushService.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, granularity + " " + signal);
+            expoPushService.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, body);
         }
 
         // 현재 시그널 저장
