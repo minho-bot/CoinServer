@@ -38,4 +38,5 @@ jobs:
           script: |
             pkill -f coinserver.jar || true
             cd /home/minho/app
-            nohup java -jar ./*.jar --server.address=0.0.0.0 > app.log 2>&1 &
+            LOGFILE=app_$(date +%y%m%d_%H%M%S).log
+            nohup java -jar ./*.jar --server.address=0.0.0.0 > $LOGFILE 2>&1 &
