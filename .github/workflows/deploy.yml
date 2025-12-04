@@ -44,7 +44,7 @@ jobs:
             cd /home/minhobot/coinserver
             LOGFILE=app_$(date +%y%m%d_%H%M%S).log
             setsid nohup java -jar coinserver.jar \
-              --spring.config.location=/home/minhobot/config/ \
+              --spring.config.location=/home/minhobot/coinserver/config/ \
               --server.address=0.0.0.0 \
               > "$LOGFILE" 2>&1 </dev/null &
               
