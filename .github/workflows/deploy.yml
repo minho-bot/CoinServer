@@ -33,18 +33,13 @@ jobs:
           target: "/home/minhobot/coinserver/"
           strip_components: 2
 
-      - name: Restart app
+      - name: Restart app via script
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USER }}
           key: ${{ secrets.GCP_SSH_KEY }}
           script: |
-            pkill -f coinserver.jar || true
             cd /home/minhobot/coinserver
-            LOGFILE=app_$(date +%y%m%d_%H%M%S).log
-            setsid nohup java -jar coinserver.jar \
-              --spring.config.location=/home/minhobot/coinserver/config/ \
-              --server.address=0.0.0.0 \
-              > "$LOGFILE" 2>&1 </dev/null &
-              
+            bash ./restart.sh
+                
