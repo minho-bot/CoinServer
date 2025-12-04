@@ -1,0 +1,41 @@
+name: Deploy Spring Boot to GCP
+
+on:
+  push:
+    branches: ["master"]   # master에 push할 때 자동 배포됨
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Build project
+        run: ./gradlew clean bootJar
+
+      - name: Upload JAR to GCP server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USER }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          source: "build/libs/*.jar"
+          target: "/home/minho/app/"
+
+      - name: Restart app
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USER }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          script: |
+            pkill -f coinserver.jar || true
+            cd /home/minho/app
+            nohup java -jar ./*.jar --server.address=0.0.0.0 > app.log 2>&1 &
