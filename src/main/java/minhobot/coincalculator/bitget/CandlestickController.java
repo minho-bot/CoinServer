@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CandlestickController {
 
-    private final BitgetService bitgetService;
+    private final BitgetUtil bitgetUtil;
 
     @GetMapping("/candles")
     public Object getCandles(
@@ -18,6 +18,6 @@ public class CandlestickController {
             @RequestParam(defaultValue = "USDT-FUTURES") String productType,
             @RequestParam(defaultValue = "20") int limit
     ) {
-        return bitgetService.getCandles(symbol, granularity, productType, limit);
+        return bitgetUtil.getCandles(symbol, granularity, productType, limit);
     }
 }

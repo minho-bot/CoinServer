@@ -2,7 +2,7 @@ package minhobot.coincalculator.cci;
 
 
 import lombok.RequiredArgsConstructor;
-import minhobot.coincalculator.bitget.BitgetService;
+import minhobot.coincalculator.bitget.BitgetUtil;
 import minhobot.coincalculator.cci.dto.CciResult;
 import org.springframework.stereotype.Service;
 import org.ta4j.core.Bar;
@@ -21,12 +21,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CciService {
 
-    private final BitgetService bitgetService;
+    private final BitgetUtil bitgetUtil;
 
     public CciResult calculateCci(String symbol, String granularity) {
 
         // 1) Bitget 데이터 받아오기
-        List<List<String>> candles = bitgetService.getCandles(
+        List<List<String>> candles = bitgetUtil.getCandles(
                 symbol, granularity, "USDT-FUTURES", 21
         );
 
