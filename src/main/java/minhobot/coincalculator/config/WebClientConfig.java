@@ -21,4 +21,11 @@ public class WebClientConfig {
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
+
+    @Bean
+    public WebClient telegramWebClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl("https://api.telegram.org")
+                .build();
+    }
 }

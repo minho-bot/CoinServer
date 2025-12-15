@@ -42,6 +42,7 @@ dependencies {
 //    implementation 'org.mariadb.jdbc:mariadb-java-client'
 
     // TEST
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
