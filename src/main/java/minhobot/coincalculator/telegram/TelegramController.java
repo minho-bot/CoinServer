@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TelegramController {
 
-    private final TelegramBotUtil telegramBotUtil;
+    private final TelegramBotClient telegramBotClient;
 
     @GetMapping("/tg/send")
     public String test() {
-        telegramBotUtil.sendMessage("spring test");
+        telegramBotClient.sendMessage("spring test");
         return "ok";
     }
 }

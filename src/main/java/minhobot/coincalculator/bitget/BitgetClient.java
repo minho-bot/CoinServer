@@ -2,14 +2,14 @@ package minhobot.coincalculator.bitget;
 
 import lombok.RequiredArgsConstructor;
 import minhobot.coincalculator.bitget.dto.BitgetResponse;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
-public class BitgetUtil {
+@Component
+public class BitgetClient {
 
     private final WebClient bitgetWebClient;
 
