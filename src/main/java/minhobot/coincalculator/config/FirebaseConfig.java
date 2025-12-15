@@ -3,25 +3,32 @@ package minhobot.coincalculator.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
 public class FirebaseConfig {
 
     @Value("${firebase.key-path}")
     private String firebaseKeyPath;
 
+    private final ResourceLoader resourceLoader;
+
     @PostConstruct
     public void init() {
         try {
-            InputStream serviceAccount = new FileInputStream(firebaseKeyPath);
+            Resource resource = resourceLoader.getResource(firebaseKeyPath);
+            InputStream serviceAccount = resource.getInputStream();
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
