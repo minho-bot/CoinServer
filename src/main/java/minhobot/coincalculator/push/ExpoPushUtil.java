@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ExpoPushService {
+public class ExpoPushUtil {
 
     private final WebClient expoWebClient;
 

@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ExpoPushController {
 
-    private final ExpoPushService expoPushService;
+    private final ExpoPushUtil expoPushUtil;
 
     @PostMapping("/expo/send")
     public String sendExpo(@RequestBody ExpoPushRequest req) {
-        expoPushService.sendExpoPush(req.getToken(), req.getTitle(), req.getBody());
+        expoPushUtil.sendExpoPush(req.getToken(), req.getTitle(), req.getBody());
         return "OK";
     }
 }

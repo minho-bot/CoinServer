@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TelegramBotService {
+public class TelegramBotUtil {
 
     @Value("${telegram.bot.token}")
     private String botToken;
