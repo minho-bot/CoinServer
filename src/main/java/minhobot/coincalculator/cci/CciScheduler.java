@@ -3,11 +3,15 @@ package minhobot.coincalculator.cci;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minhobot.coincalculator.cci.dto.CciResult;
-import minhobot.coincalculator.push.ExpoPushService;
+import minhobot.coincalculator.leverage.LeverageResponse;
+import minhobot.coincalculator.leverage.LeverageService;
+import minhobot.coincalculator.push.ExpoPushClient;
+import minhobot.coincalculator.telegram.TelegramBotClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
@@ -16,12 +20,14 @@ import java.util.Map;
 public class CciScheduler {
 
     private final CciService cciService;
-    private final ExpoPushService expoPushService;
+    private final LeverageService leverageService;
+    private final ExpoPushClient expoPushClient;
+    private final TelegramBotClient telegramBotClient;
 
     // 이전 시그널 저장용
     private final Map<String, String> lastSignalMap = new HashMap<>();
 
-    // 1시간봉 체크 (5분 마다 실행)
+    // 1시간봉 체크 (1분 마다 실행)
     @Scheduled(cron = "0 * * * * *")
     public void check1H() {
         checkCci("BTCUSDT", "1H");
@@ -61,7 +67,38 @@ public class CciScheduler {
 
             log.info("[CCI SIGNAL] {} {} → {}", symbol, granularity, signal);
             // 등록된 계정의 모든 push token 순회
-            expoPushService.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, body);
+            expoPushClient.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, body);
+
+            LeverageResponse leverageResponse = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, signal.toLowerCase(Locale.ROOT));
+            String text = String.format("""
+                    test
+                    🚨 *CCI SIGNAL DETECTED* 🚨
+                    
+                    ━━━━━━━━━━━━━━
+                    📌 *SYMBOL*      : `%s`
+                    📊 *TIMEFRAME*   : `%s`
+                    📈 *POSITION*    : *%s*
+                    💰 *PRICE*       : `%s`
+                    ⚡ *LEVERAGE*    : *%sx*
+                    ━━━━━━━━━━━━━━
+                    
+                    🧠 *Strategy*
+                    \\- CCI %s threshold crossover
+                    \\- Signal confirmed on close
+                    
+                    ⏰ *Detected at*
+                    `%s`
+                    
+                    """,
+                    symbol,
+                    granularity,
+                    signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
+                    price,
+                    leverageResponse.getLeverage(),
+                    signal,
+                    java.time.LocalDateTime.now()
+            );
+            telegramBotClient.sendMessage(text);
         }
 
         // 현재 시그널 저장
