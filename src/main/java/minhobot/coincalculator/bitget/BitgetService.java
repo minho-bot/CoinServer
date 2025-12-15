@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BitgetUtil {
+public class BitgetService {
 
     private final WebClient bitgetWebClient;
 

@@ -1,17 +1,16 @@
 package minhobot.coincalculator.push;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ExpoPushService {
 
-    private final WebClient expoWebClient = WebClient.builder()
-            .baseUrl("https://exp.host/--/api/v2/push/send")
-            .defaultHeader("Content-Type", "application/json")
-            .build();
+    private final WebClient expoWebClient;
 
     public void sendExpoPush(String expoToken, String title, String body) {
 

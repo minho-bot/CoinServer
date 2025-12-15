@@ -2,7 +2,7 @@ package minhobot.coincalculator.cci;
 
 
 import lombok.RequiredArgsConstructor;
-import minhobot.coincalculator.bitget.BitgetUtil;
+import minhobot.coincalculator.bitget.BitgetService;
 import minhobot.coincalculator.cci.dto.CciResult;
 import org.springframework.stereotype.Service;
 import org.ta4j.core.Bar;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CciService {
 
-    private final BitgetUtil bitgetService;
+    private final BitgetService bitgetService;
 
     public CciResult calculateCci(String symbol, String granularity) {
 

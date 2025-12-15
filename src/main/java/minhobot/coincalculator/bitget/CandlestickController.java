@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CandlestickController {
 
-    private final BitgetUtil bitgetService;
+    private final BitgetService bitgetService;
 
     @GetMapping("/candles")
     public Object getCandles(

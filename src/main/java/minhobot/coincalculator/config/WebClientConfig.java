@@ -18,6 +18,7 @@ public class WebClientConfig {
     public WebClient expoWebClient(WebClient.Builder builder) {
         return builder
                 .baseUrl("https://exp.host/--/api/v2/push/send")
+                .defaultHeader("Content-Type", "application/json")
                 .build();
     }
 }

@@ -1,7 +1,7 @@
 package minhobot.coincalculator.leverage;
 
 import lombok.RequiredArgsConstructor;
-import minhobot.coincalculator.bitget.BitgetUtil;
+import minhobot.coincalculator.bitget.BitgetService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/leverage")
 public class LeverageController {
 
-    private final BitgetUtil bitgetService;
+    private final BitgetService bitgetService;
 
     @GetMapping
     public LeverageResponse calculateLeverage(
