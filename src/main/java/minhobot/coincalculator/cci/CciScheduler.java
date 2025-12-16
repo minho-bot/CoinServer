@@ -71,7 +71,6 @@ public class CciScheduler {
 
             LeverageResponse leverageResponse = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, signal.toLowerCase(Locale.ROOT));
             String text = String.format("""
-                    test
                     🚨 *CCI SIGNAL DETECTED* 🚨
                     
                     ━━━━━━━━━━━━━━
@@ -83,8 +82,7 @@ public class CciScheduler {
                     ━━━━━━━━━━━━━━
                     
                     🧠 *Strategy*
-                    \\- CCI %s threshold crossover
-                    \\- Signal confirmed on close
+                    \\- recommend stop-loss : %s
                     
                     ⏰ *Detected at*
                     `%s`
@@ -95,7 +93,7 @@ public class CciScheduler {
                     signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
                     price,
                     leverageResponse.getLeverage(),
-                    signal,
+                    leverageResponse.getStoploss(),
                     java.time.LocalDateTime.now()
             );
             telegramBotClient.sendMessage(text);
