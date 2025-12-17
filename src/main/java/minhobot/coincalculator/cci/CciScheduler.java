@@ -82,7 +82,7 @@ public class CciScheduler {
                     ━━━━━━━━━━━━━━
                     
                     🧠 *Strategy*
-                    \\- recommend stop-loss : %s
+                    \\- recommend stop loss : %s
                     
                     ⏰ *Detected at*
                     `%s`
