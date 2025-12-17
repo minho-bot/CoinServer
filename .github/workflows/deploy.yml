@@ -23,13 +23,6 @@ jobs:
       - name: Build project
         run: ./gradlew clean bootJar
 
-      - name: Debug DNS/SSH reachability
-        run: |
-          echo "HOST='${{ secrets.GCP_HOST }}'"
-          getent hosts "${{ secrets.GCP_HOST }}" || true
-          nslookup "${{ secrets.GCP_HOST }}" || true
-          timeout 5 bash -lc 'cat < /dev/null > /dev/tcp/${{ secrets.GCP_HOST }}/22' && echo "22 open" || echo "22 closed/unreachable"
-
       - name: Upload JAR to GCP server
         uses: appleboy/scp-action@v0.1.4
         with:
