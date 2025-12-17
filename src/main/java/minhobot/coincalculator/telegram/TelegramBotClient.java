@@ -33,9 +33,20 @@ public class TelegramBotClient {
                         .with("text", text)
                         .with("parse_mode", "MarkdownV2"))
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                        resp -> resp.bodyToMono(String.class)
+                                .defaultIfEmpty("")
+                                .flatMap(body -> {
+                                    log.error("Telegram HTTP {} body={}", resp.statusCode().value(), body);
+                                    return reactor.core.publisher.Mono.error(
+                                            new RuntimeException("Telegram API error " + resp.statusCode().value() + ": " + body)
+                                    );
+                                })
+                )
                 .bodyToMono(String.class)
-                .doOnSuccess(res -> log.info("Telegram send success: {}", res))
-                .doOnError(err -> log.error("Telegram send failed", err))
-                .subscribe();
+                .subscribe(
+                        ok -> { },
+                        err -> log.error("Telegram subscribe error", err)
+                );
     }
 }

@@ -93,7 +93,7 @@ public class CciScheduler {
                     signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
                     price,
                     leverageResponse.getLeverage(),
-                    leverageResponse.getStoploss(),
+                    (int) leverageResponse.getStoploss(),
                     java.time.LocalDateTime.now()
             );
             telegramBotClient.sendMessage(text);
