@@ -32,6 +32,7 @@ jobs:
           source: "build/libs/*.jar"
           target: "/home/minhobot/coinserver/"
           strip_components: 2
+          debug: true
 
       - name: Restart app via script
         uses: appleboy/ssh-action@v1.0.0
