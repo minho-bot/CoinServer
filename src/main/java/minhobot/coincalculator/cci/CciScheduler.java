@@ -82,7 +82,7 @@ public class CciScheduler {
                     ━━━━━━━━━━━━━━
                     
                     🧠 *Strategy*
-                    \\- recommend stop loss : %s
+                    \\- recommend stop loss : `%s`
                     
                     ⏰ *Detected at*
                     `%s`
@@ -93,12 +93,11 @@ public class CciScheduler {
                     signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
                     price,
                     leverageResponse.getLeverage(),
-                    (int) leverageResponse.getStoploss(),
+                    leverageResponse.getStoploss(),
                     java.time.LocalDateTime.now()
             );
             telegramBotClient.sendMessage(text);
         }
-        telegramBotClient.sendMessage(java.time.LocalDateTime.now().toString());
 
         // 현재 시그널 저장
         lastSignalMap.put(key, signal);
