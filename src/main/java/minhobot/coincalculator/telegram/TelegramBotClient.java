@@ -45,7 +45,7 @@ public class TelegramBotClient {
                 )
                 .bodyToMono(String.class)
                 .subscribe(
-                        ok -> { },
+                        ok -> log.info("Telegram API response {}", ok),
                         err -> log.error("Telegram subscribe error", err)
                 );
     }
