@@ -97,8 +97,8 @@ public class CciScheduler {
                     java.time.LocalDateTime.now()
             );
             telegramBotClient.sendMessage(text);
-        telegramBotClient.sendMessage(java.time.LocalDateTime.now().toString());
         }
+        telegramBotClient.sendMessage(java.time.LocalDateTime.now().toString());
 
         // 현재 시그널 저장
         lastSignalMap.put(key, signal);

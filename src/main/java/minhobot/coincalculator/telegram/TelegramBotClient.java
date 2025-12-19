@@ -39,7 +39,7 @@ public class TelegramBotClient {
                                 .flatMap(body -> {
                                     log.error("Telegram HTTP {} body={}", resp.statusCode().value(), body);
                                     return reactor.core.publisher.Mono.error(
-                                            new RuntimeException("Telegram API error " + resp.statusCode().value() + ": " + body)
+                                            new RuntimeException("Telegram API error " + resp.statusCode().value() + ": " + body + ", text: " + text)
                                     );
                                 })
                 )
