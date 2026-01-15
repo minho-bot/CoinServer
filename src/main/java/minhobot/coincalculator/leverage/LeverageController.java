@@ -16,8 +16,9 @@ public class LeverageController {
             @RequestParam(defaultValue = "1H") String timeframe,
             @RequestParam(defaultValue = "USDT-FUTURES") String productType,
             @RequestParam double lossPercent,
+            @RequestParam double targetProfitPercent,
             @RequestParam String side // "long" or "short"
     ) {
-        return leverageService.calculateLeverage(symbol, timeframe, productType, lossPercent, side);
+        return leverageService.calculateLeverage(symbol, timeframe, productType, lossPercent, targetProfitPercent, side);
     }
 }

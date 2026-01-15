@@ -87,7 +87,7 @@ public class CciScheduler {
         // 알림 전송
         expoPushClient.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, body);
 
-        LeverageResponse leverageResponse = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, signal.toLowerCase(Locale.ROOT));
+        LeverageResponse leverageResponse = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, 10, signal.toLowerCase(Locale.ROOT));
         String text = String.format("""
                 🚨 *CCI SIGNAL DETECTED* 🚨
                 
@@ -100,7 +100,8 @@ public class CciScheduler {
                 ━━━━━━━━━━━━━━
                 
                 🧠 *Strategy*
-                \\- recommend stop loss : `%s`
+                \\- Stop Loss     : `%s`
+                \\- Take Profit   : `%s`
                 
                 ⏰ *Detected at*
                 `%s`
@@ -111,7 +112,8 @@ public class CciScheduler {
                 signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
                 price,
                 leverageResponse.getLeverage(),
-                leverageResponse.getStoploss(),
+                leverageResponse.getStopLoss(),
+                leverageResponse.getTakeProfit(),
                 LocalDateTime.now()
         );
         telegramBotClient.sendMessage(text);

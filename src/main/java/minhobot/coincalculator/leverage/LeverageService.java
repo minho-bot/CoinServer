@@ -17,63 +17,77 @@ public class LeverageService {
             String timeframe,
             String productType,
             double lossPercent,
-            String side // "long" or "short"
+            double targetProfitPercent,
+            String side
     ) {
-        // 최근 2개 봉 가져오기 (현재 + 이전)
-        List<List<String>> candles = bitgetClient.getCandles(symbol, timeframe, productType, 2);
+        int candleCount = 4;
+        List<List<String>> candles = bitgetClient.getCandles(symbol, timeframe, productType, candleCount);
 
-        if (candles.size() < 2) {
+        if (candles.size() < candleCount) {
             throw new RuntimeException("캔들 개수가 부족합니다.");
         }
 
-        List<String> prev = candles.get(0);  // 이전 봉
-        List<String> curr = candles.get(1);  // 현재 봉
+        List<String> currentCandle = candles.get(candles.size() - 1);
+        double currentPrice = Double.parseDouble(currentCandle.get(4));
 
-        // 문자열 -> double 변환
-        double currOpen = Double.parseDouble(curr.get(1));
-        double currHigh = Double.parseDouble(curr.get(2));
-        double currLow  = Double.parseDouble(curr.get(3));
-        double currClose = Double.parseDouble(curr.get(4));
+        double lowestLow = Double.MAX_VALUE;
+        double highestHigh = Double.MIN_VALUE;
 
-        double prevHigh = Double.parseDouble(prev.get(2));
-        double prevLow  = Double.parseDouble(prev.get(3));
-
-        double currentPrice = currClose;
-
-        // 계산식
-        lossPercent = lossPercent / 100.0; // % -> 0.x
-
-        double leverage;
-        double stoploss;
-
-        if (side.equalsIgnoreCase("long")) {
-            double worstLow = Math.min(currLow, prevLow);
-            double drawdown = (currentPrice - worstLow) / currentPrice;
-            leverage = lossPercent / drawdown;
-            stoploss = worstLow;
-        } else if (side.equalsIgnoreCase("short")) {
-            double worstHigh = Math.max(currHigh, prevHigh);
-            double drawup = (worstHigh - currentPrice) / currentPrice;
-            leverage = lossPercent / drawup;
-            stoploss = worstHigh;
-        } else {
-            throw new RuntimeException("side는 long 또는 short 여야 합니다.");
+        for (List<String> candle : candles) {
+            double high = Double.parseDouble(candle.get(2));
+            double low = Double.parseDouble(candle.get(3));
+            if (low < lowestLow) lowestLow = low;
+            if (high > highestHigh) highestHigh = high;
         }
 
-        int finalLeverage = (int) Math.floor(leverage);
+        // --- 여기서부터 분기 시작 ---
+
+        double stoploss;     // 손절가
+        double diffRate;     // 진입가와 손절가의 차이 비율 (양수)
+        int direction;       // 롱: 1, 숏: -1 (익절가 계산용)
+
+        if (side.equalsIgnoreCase("long")) {
+            stoploss = lowestLow;
+            diffRate = (currentPrice - stoploss) / currentPrice;
+            direction = 1;
+        } else if (side.equalsIgnoreCase("short")) {
+            stoploss = highestHigh;
+            diffRate = (stoploss - currentPrice) / currentPrice;
+            direction = -1;
+        } else {
+            throw new RuntimeException("Side must be LONG or SHORT");
+        }
+
+        // --- 공통 로직 (중복 제거됨) ---
+
+        // 1. 방어 로직 (이미 손절가 돌파시)
+        if (diffRate <= 0) diffRate = 0.0001;
+
+        // 2. 레버리지 계산
+        double lossRatio = lossPercent / 100.0;
+        double rawLeverage = lossRatio / diffRate;
+
+        // 3. 레버리지 보정 (1 ~ 125)
+        int finalLeverage = (int) Math.floor(rawLeverage);
+        if (finalLeverage < 1) finalLeverage = 1;
+        if (finalLeverage > 125) finalLeverage = 125;
+
+        // 4. 익절가 계산
+        // 목표 수익률(ratio) / 레버리지 = 순수 코인 변동폭
+        // 롱(1)이면 더하고, 숏(-1)이면 뺌
+        double profitRatio = targetProfitPercent / 100.0;
+        double priceMoveNeeded = profitRatio / finalLeverage;
+
+        double takeprofit = currentPrice * (1 + (priceMoveNeeded * direction));
 
         return LeverageResponse.builder()
                 .symbol(symbol)
                 .timeframe(timeframe)
-                .side(side)
-                .lossPercent(lossPercent)
-                .leverage(finalLeverage)
+                .side(side.toUpperCase())
                 .currentPrice(currentPrice)
-                .currHigh(currHigh)
-                .prevHigh(prevHigh)
-                .currLow(currLow)
-                .prevLow(prevLow)
-                .stoploss(stoploss)
+                .leverage(finalLeverage)
+                .stopLoss(stoploss)
+                .takeProfit(takeprofit)
                 .build();
     }
 }
