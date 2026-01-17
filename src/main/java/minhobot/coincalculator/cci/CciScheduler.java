@@ -89,36 +89,8 @@ public class CciScheduler {
         // 알림 전송
         expoPushClient.sendExpoPush("ExponentPushToken[BOoL4mEJNdCFdxTIkqD2RU]", signal, body);
 
-        LeverageResponse leverageResponse = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, 10, signal.toLowerCase(Locale.ROOT));
-        String text = String.format("""
-                🚨 *CCI SIGNAL DETECTED* 🚨
-                
-                ━━━━━━━━━━━━━━
-                📌 *SYMBOL* : `%s`
-                📊 *TIMEFRAME* : `%s`
-                📈 *POSITION* : *%s*
-                💰 *PRICE* : `%s`
-                ⚡ *LEVERAGE* : *%sx*
-                ━━━━━━━━━━━━━━
-                
-                🧠 *Strategy*
-                \\- Stop Loss     : `%s`
-                \\- Take Profit   : `%s`
-                
-                ⏰ *Detected at*
-                `%s`
-                
-                """,
-                symbol,
-                granularity,
-                signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
-                price,
-                leverageResponse.getLeverage(),
-                leverageResponse.getStopLoss(),
-                leverageResponse.getTakeProfit(),
-                LocalDateTime.now()
-        );
-        telegramBotClient.sendMessage(text);
+        LeverageResponse leverage = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, 10, signal.toLowerCase(Locale.ROOT));
+        telegramBotClient.sendSignalMessage(symbol, granularity, signal, price, leverage);
 
         // (중요) 알림을 보냈으므로, 현재 봉 시간을 맵에 저장해서 락을 검
         lastAlertedTimeMap.put(key, currentCandleTime);

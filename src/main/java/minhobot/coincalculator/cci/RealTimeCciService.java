@@ -138,36 +138,8 @@ public class RealTimeCciService {
         log.info("🚀 [BREAKOUT] {} {} -> {}", granularity, signal, price);
         LeverageResponse leverage = leverageService.calculateLeverage(symbol, granularity, "USDT-FUTURES", 10, 20, signal.toLowerCase(Locale.ROOT));
 
-        String text = String.format("""
-                🚨 *CCI SIGNAL DETECTED* 🚨
-                
-                ━━━━━━━━━━━━━━
-                📌 *SYMBOL* : `%s`
-                📊 *TIMEFRAME* : `%s`
-                📈 *POSITION* : *%s*
-                💰 *PRICE* : `%s`
-                ⚡ *LEVERAGE* : *%sx*
-                ━━━━━━━━━━━━━━
-                
-                🧠 *Strategy*
-                \\- Stop Loss     : `%s`
-                \\- Take Profit   : `%s`
-                
-                ⏰ *Detected at*
-                `%s`
-                
-                """,
-                symbol,
-                granularity,
-                signal.equals("LONG") ? "🟢 LONG" : "🔴 SHORT",
-                price,
-                leverage.getLeverage(),
-                leverage.getStopLoss(),
-                leverage.getTakeProfit(),
-                LocalDateTime.now()
-        );
+        telegramBotClient.sendSignalMessage(symbol, granularity, signal, price, leverage);
 
-        telegramBotClient.sendMessage(text);
         lastAlertedTimeMap.put(symbol + ":" + granularity, timestamp);
     }
 
