@@ -15,6 +15,7 @@ import org.ta4j.core.num.DecimalNum;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -37,6 +38,8 @@ public class CciService {
         for (List<String> c : candles) {
 
             long timestamp = Long.parseLong(c.get(0));
+            ZonedDateTime startTime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.of("Asia/Seoul"));
+            ZonedDateTime endTime = startTime.plus(duration);
             double open = Double.parseDouble(c.get(1));
             double high = Double.parseDouble(c.get(2));
             double low = Double.parseDouble(c.get(3));
@@ -46,7 +49,7 @@ public class CciService {
 
             Bar bar = new BaseBar(
                     duration,
-                    Instant.ofEpochMilli(timestamp).atZone(ZoneId.of("Asia/Seoul")),
+                    endTime,
                     DecimalNum.valueOf(open),
                     DecimalNum.valueOf(high),
                     DecimalNum.valueOf(low),
