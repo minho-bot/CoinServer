@@ -7,6 +7,7 @@ import minhobot.coincalculator.leverage.LeverageResponse;
 import minhobot.coincalculator.leverage.LeverageService;
 import minhobot.coincalculator.push.ExpoPushClient;
 import minhobot.coincalculator.telegram.TelegramBotClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class CciScheduler {
 
+    @Value("${app.scheduler.enabled:false}") // 기본값 false
+    private boolean isSchedulerEnabled;
+
     private final CciService cciService;
     private final LeverageService leverageService;
     private final ExpoPushClient expoPushClient;
@@ -29,15 +33,13 @@ public class CciScheduler {
     // Key: "BTCUSDT:1H", Value: 2024-01-15T14:00:00 (해당 봉의 시간)
     private final Map<String, LocalDateTime> lastAlertedTimeMap = new ConcurrentHashMap<>();
 
-    // 1시간봉 체크 (1분 마다 실행)
     @Scheduled(cron = "0 * * * * *")
-    public void check1H() {
+    public void runPolling() {
+        // 스위치가 꺼져있으면 바로 리턴
+        if (!isSchedulerEnabled) {
+            return;
+        }
         checkCci("BTCUSDT", "1H");
-    }
-
-    // 4시간봉 체크
-    @Scheduled(cron = "0 * * * * *")
-    public void check4H() {
         checkCci("BTCUSDT", "4H");
     }
 
