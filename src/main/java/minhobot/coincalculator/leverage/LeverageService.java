@@ -2,6 +2,7 @@ package minhobot.coincalculator.leverage;
 
 import lombok.RequiredArgsConstructor;
 import minhobot.coincalculator.bitget.BitgetClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,9 @@ public class LeverageService {
 
     private final BitgetClient bitgetClient;
 
+    @Value("${app.leverage.candle-count}")
+    private int candleCount;
+
     public LeverageResponse calculateLeverage(
             String symbol,
             String timeframe,
@@ -20,7 +24,6 @@ public class LeverageService {
             double targetProfitPercent,
             String side
     ) {
-        int candleCount = 4;
         List<List<String>> candles = bitgetClient.getCandles(symbol, timeframe, productType, candleCount);
 
         if (candles.size() < candleCount) {
