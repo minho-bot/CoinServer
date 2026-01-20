@@ -111,11 +111,6 @@ public class BitgetWebSocketClient extends WebSocketListener {
                     "args": [
                         {
                             "instType": "USDT-FUTURES",
-                            "channel": "candle1H",
-                            "instId": "BTCUSDT"
-                        },
-                        {
-                            "instType": "USDT-FUTURES",
                             "channel": "candle4H",
                             "instId": "BTCUSDT"
                         }
